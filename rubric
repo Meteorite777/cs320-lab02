@@ -13,7 +13,7 @@ Author: Nicholas Frank
 |                         |         | • **3 pts:** Correctly implements array address / pointer arithmetic             |
 |                         |         |                                                                                  |
 | **Loop & Branch Logic** |  **5**  | • **2 pts:** Correctly use of branching logic / loop termination                 |
-|			  |         | • **2 pts:** Uses conditional logic to accurately isolate negative numbers.      |
+|                         |         | • **2 pts:** Uses conditional logic to accurately isolate negative numbers.      |
 |                         |         | • **1 pt:**  Include jump logic to keep loop iterating                           |
 |                         |         |                                                                                  |
 | **Correctness & Style** |  **6**  | • **4 pts:** Program compiles and runs without crashing in Venus,  producing the |
