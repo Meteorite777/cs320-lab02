@@ -1,0 +1,42 @@
+.data
+ratings:      .word 5, 2, 4, 1, 3  # Array of 5 movie ratings
+total_movies: .word 5              # Total number of elements in the array
+
+.text
+main:
+    # 1. Initialize Memory Addresses and Dynamic Bounds
+    la s0, ratings         # s0 = base address of the ratings array (acts as tracking pointer)
+    la t0, total_movies   # t0 = address of total_movies variable
+    lw s1, 0(t0)           # s1 = total number of movies to check (5)
+    
+    # 2. Initialize Loop Tracking Registers
+    li s2, 0               # s2 = loop counter index (starts at 0)
+
+loop:
+    # 3. Check Loop Termination Condition
+    beq s2, s1, exit       # If counter (s2) == total_movies (s1), stop looping and exit
+
+    # 4. Load the Current Rating from Memory
+    lw s3, 0(s0)           # s3 = current_rating loaded from the address held in s0
+
+    # 5. Conditional Logic: Check if rating < 3
+    slti t1, s3, 3         # t1 = 1 if current_rating (s3) < 3; otherwise t1 = 0
+    beq t1, x0, skip_print # If t1 == 0, the rating is 3 or higher. Skip the printing step.
+
+print_bad_rating:
+    # 6. Execute System Call to Print the Bad Rating
+    mv a0, s3              # Move the value to print into argument register a0
+    li a7, 1               # Service code 1: print integer (or 'li v0, 1' depending on Venus version)
+    ecall                  # Trigger system environment call
+
+skip_print:
+    # 7. Advance Pointer and Loop Tracking Indices
+    addi s0, s0, 4         # Move array memory pointer forward by exactly 4 bytes (1 word)
+    addi s2, s2, 1         # Add 1 to loop index counter
+    j loop                 # Unconditional jump back to the top of the loop header
+
+exit:
+    # 8. Gracefully Terminate Program Execution
+    li a0, 10              # Service code 10: clean exit (or 'li v0, 10')
+    ecall                  # Hand execution control back to Venus simulator engine
+
