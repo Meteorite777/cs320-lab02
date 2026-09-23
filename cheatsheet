@@ -1,0 +1,100 @@
+# RISC-V (RV32I) Beginner Cheat Sheet
+
+## 1. Core Architecture Registers
+RV32I has 32 general-purpose registers (`x0` to `x31`), each 32 bits wide.
+
+| Register	| ABI Name 	| Description 			| Saver  |
+| :--- 		| :--- 		| :---        			| :---   |
+| `x0`		| `zero`   	| Hardwired to 0		| — 	 |
+| `x1` 		| `ra` 		| Return Address		| Caller |
+| `x2` 		| `sp`		| Stack Pointer			| Callee |
+| `x3` 		| `gp` 		| Global Pointer		| —  	 |
+| `x4` 		| `tp` 		| Thread Pointer		| — 	 |
+| `x5`-`x7` 	| `t0`-`t2` 	| Temporary Registers		| Caller |
+| `x8` 		| `s0`/`fp`	| Saved Register/Frame Pointer	| Callee |
+| `x9` 		| `s1` 		| Saved Register 		| Callee |
+| `x10`-`x11`	| `a0`-`a1` 	| Arguments / Return Values     | Caller |
+| `x12`-`x17`	| `a2`-`a3` 	| Function Arguments 		| Caller |
+| `x18`-`x27`	| `s2`-`s11`	| Saved Registers 		| Callee |
+| `x28`-`x31`	| `t3`-`t6` 	| Temporary Registers 		| Caller |
+
+---
+
+## 2. Common Instructions
+*Syntax: `opcode dest, src1, src2`*
+
+### Arithmetic & Logic
+* `add rd, rs1, rs2`   - `rd = rs1 + rs2`
+* `addi rd, rs1, imm`  - `rd = rs1 + imm` (Add Immediate)
+* `sub rd, rs1, rs2`   - `rd = rs1 - rs2`
+* `and rd, rs1, rs2`   - `rd = rs1 & rs2` (Bitwise AND)
+* `or rd, rs1, rs2`    - `rd = rs1 | rs2` (Bitwise OR)
+* `xor rd, rs1, rs2`   - `rd = rs1 ^ rs2` (Bitwise XOR)
+
+### Shifts
+* `sll rd, rs1, rs2`   - `rd = rs1 << rs2` (Shift Left Logical)
+* `srl rd, rs1, rs2`   - `rd = rs1 >> rs2` (Shift Right Logical)
+* `sra rd, rs1, rs2`   - `rd = rs1 >> rs2` (Shift Right Arithmetic, preserves sign bit)
+
+### Memory Operations (Load & Store)
+*Note: Memory addresses are formed by adding an offset immediate to a base register: `offset(register)`*
+* `lw rd, offset(rs1)`  - Load 32-bit Word from memory into `rd`
+* `lh rd, offset(rs1)`  - Load 16-bit Halfword (sign-extended) into `rd`
+* `lb rd, offset(rs1)`  - Load 8-bit Byte (sign-extended) into `rd`
+* `sw rs2, offset(rs1)` - Store 32-bit Word from `rs2` into memory
+* `sh rs2, offset(rs1)` - Store 16-bit Halfword from `rs2` into memory
+* `sb rs2, offset(rs1)` - Store 8-bit Byte from `rs2` into memory
+
+### Conditional Branches
+*Syntax: `op rs1, rs2, label`*
+* `beq rs1, rs2, label`  - Branch to `label` if `rs1 == rs2`
+* `bne rs1, rs2, label`  - Branch to `label` if `rs1 != rs2`
+* `blt rs1, rs2, label`  - Branch to `label` if `rs1 < rs2` (signed)
+* `bge rs1, rs2, label`  - Branch to `label` if `rs1 >= rs2` (signed)
+
+### Unconditional Jumps
+* `jal rd, label`        - Jump to `label` and store return address PC+4 in `rd` (usually `ra`)
+* `jalr rd, offset(rs1)` - Jump to `rs1 + offset` and store return address PC+4 in `rd`
+
+---
+
+## 3. Common Pseudo-Instructions
+Shorthand codes written by programmers that the assembler maps to core hardware instructions.
+
+* `li rd, imm`      - Load Immediate (Maps to: `addi rd, zero, imm`)
+* `mv rd, rs`       - Copy Register (Maps to: `addi rd, rs, 0`)
+* `j label`         - Unconditional Jump (Maps to: `jal zero, label`)
+* `jr rs`           - Jump Register (Maps to: `jalr zero, 0(rs)`)
+* `ret`             - Return from subroutine (Maps to: `jalr zero, 0(ra)`)
+* `nop`             - No Operation (Maps to: `addi zero, zero, 0`)
+
+---
+
+## 4. Basic Code Layout Example
+
+```assembly
+.data
+    # Variables go here
+    val1: .word 10
+    val2: .word 20
+
+.text
+.globl main
+main:
+    # Load address of val1 into t0
+    la t0, val1        
+    lw t1, 0(t0)       # t1 = 10
+    
+    li t2, 20          # t2 = 20 (immediate)
+    
+    add t3, t1, t2     # t3 = t1 + t2 = 30
+    
+    # Simple conditional exit check
+    li t4, 30
+    beq t3, t4, exit_program
+    
+exit_program:
+    li a7, 10          # Environment call code for exit (depends on emulator)
+    ecall              # System call
+```
+

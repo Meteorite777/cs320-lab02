@@ -1,0 +1,80 @@
+# ==============================================================================
+# RISC-V Lab: C to Assembly Translation
+# Objective: Fill in the missing code to loop through an array and count
+#            the number of negative integers.
+# Simulator: Venus
+# ==============================================================================
+
+.data
+# Global variables (Do not modify these test cases)
+array: .word -5, 12, 0, -1, 7, -23, 14
+size:  .word 7
+
+.text
+.globl main
+
+main:
+    # --------------------------------------------------------------------------
+    # TASK 1: Initialization (Setup addresses and counters)
+    # --------------------------------------------------------------------------
+    la   t0, array       # t0 = base address of array
+    la   t1, size        # t1 = address of size variable
+   
+    # TODO: Load the actual integer value of 'size' from memory into t1
+    # [YOUR CODE HERE]
+   
+    # TODO: Initialize loop counter (i = 0) into t2
+    # [YOUR CODE HERE]
+   
+    # TODO: Initialize negative number counter (negative_counter = 0) into t3
+    # [YOUR CODE HERE]
+
+loop:
+    # --------------------------------------------------------------------------
+    # TASK 2: Loop Control & Memory Fetch
+    # --------------------------------------------------------------------------
+    # TODO: Check if your loop counter (t2) equals the array size (t1).
+    #       If equal, branch/jump to the 'print' label.
+    # [YOUR CODE HERE]
+
+    # TODO: Load the current array element (from address in t0) into t4
+    # [YOUR CODE HERE]
+
+    # --------------------------------------------------------------------------
+    # TASK 3: Conditional Logic
+    # --------------------------------------------------------------------------
+    # TODO: Determine if the value in t4 is negative.
+    #       If it is NOT negative, branch/jump to skip the increment step.
+    # HINT: Look up the 'slti' instruction and compare the result against x0.
+    # [YOUR CODE HERE]
+
+    # TODO: Increment the negative counter (t3) by 1
+    # [YOUR CODE HERE]
+
+skip:
+    # --------------------------------------------------------------------------
+    # TASK 4: Pointer & Counter Updates
+    # --------------------------------------------------------------------------
+    # TODO: Advance the array pointer (t0) to the next integer.
+    #       CRITICAL: How many bytes does an integer take in RISC-V?
+    # [YOUR CODE HERE]
+
+    # TODO: Increment your loop counter (t2) by 1
+    # [YOUR CODE HERE]
+
+    # TODO: Unconditionally jump back to the start of the loop
+    # [YOUR CODE HERE]
+
+print:
+    # --------------------------------------------------------------------------
+    # TASK 5: Output & Exit (Venus Environment Calls)
+    # --------------------------------------------------------------------------
+    # TODO: Copy the final count from t3 into a1, then call Venus to print it.
+    #       (Venus print integer requires a0 = 1, value in a1)
+    # [YOUR CODE HERE]
+   
+    ecall                # Execute print integer
+
+    # Exit program cleanly
+    li   a0, 10          # Venus exit call code
+    ecall                # Execute exit

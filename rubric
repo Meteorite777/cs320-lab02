@@ -1,0 +1,22 @@
+# CS320 In-Class Lab Rubric: C to RISC-V Translation (20 Points Total)
+
+Author: Nicholas Frank
+09/23/2026
+
+| Category                | Points  | Evaluation Criteria                                                              |
+| :---------------------- | :----:  | :------------------------------------------------------------------------------- |
+| **Data & Setup**        |  **4**  | • **2 pts:** Correctly defines the array and size variables in `.data' using     |
+|                         |         | • **2 pts:** Correctly uses Venus `ecall` codes                                  |
+|                         |         |                                                                                  |
+| **Memory & Addressing** |  **5**  | • **2 pts:** Uses `la` and `lw` correctly to load the array base address and     |
+|                         |         |              size boundary.                                                      |
+|                         |         | • **3 pts:** Correctly implements array address / pointer arithmetic             |
+|                         |         |                                                                                  |
+| **Loop & Branch Logic** |  **5**  | • **2 pts:** Correctly use of branching logic / loop termination                 |
+|			  |         | • **2 pts:** Uses conditional logic to accurately isolate negative numbers.      |
+|                         |         | • **1 pt:**  Include jump logic to keep loop iterating                           |
+|                         |         |                                                                                  |
+| **Correctness & Style** |  **6**  | • **4 pts:** Program compiles and runs without crashing in Venus,  producing the |
+|                         |         |              exact output required by the logic.                                 |
+|                         |         | • **2 pts:** Code is organized with clear labels and contains comments linking   |
+|                         |         |              assembly steps back to the C logic.                                 |
